@@ -1,0 +1,95 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+# name: Python application
+
+# on:
+#   push:
+#     id: push
+#     branches: [ "main" ]
+#   pull_request:
+#     branches: [ "main" ]
+#   schedule:
+#   - cron: "0 0,3,6,9,12,15,18,21 * * *"
+
+# permissions:
+#   contents: write
+#   pull-requests: write
+
+# jobs:
+#   linter:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#         env:
+#           GIT_TRACE: 1
+#           GIT_CURL_VERBOSE: 1
+
+#       - name: Set up Python 3.x
+#         uses: actions/setup-python@v2
+#         with:
+#           python-version: '3.x'
+
+#       - name: Check code style
+#         if: always()
+#         run: |
+#           python3 -m pip install --upgrade pip
+#           pip install flake8
+#           flake8
+#   autotests:
+#     env:
+#       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+#       SLACK_ICON: https://cdn-icons-png.flaticon.com/512/4712/4712139.png
+#     needs: linter
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Set up Python 3.x
+#         uses: actions/setup-python@v2
+#         with:
+#           python-version: '3.x'
+
+#       - name: Install dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install -r requirements.txt
+#       - name: Run Test
+#         if: always()
+#         run: python -m pytest --alluredir=allure-results
+#         continue-on-error: true
+
+#       - name: Get Allure history
+#         uses: actions/checkout@v2
+#         if: always()
+#         continue-on-error: true
+#         with:
+#           ref: gh-pages
+#           path: gh-pages
+
+#       - name: Allure Report action from marketplace
+#         uses: simple-elf/allure-report-action@master
+#         if: always()
+#         with:
+#           allure_results: allure-results
+#           allure_history: allure-history
+
+#       - name: Deploy report to Github Pages
+#         if: always()
+#         uses: peaceiris/actions-gh-pages@v2
+#         env:
+#           PERSONAL_TOKEN: ${{ secrets.PERSONAL_TOKEN_ALTAIR }}
+#           PUBLISH_BRANCH: gh-pages
+#           PUBLISH_DIR: allure-history
+
+#       - name: Slack Notification
+#         uses: act10ns/slack@v1
+#         with:
+#           status: ${{ job.status }}
+#           # steps: ${{ toJson(steps) }}
+#           # ${{ steps.test-run.outcome }}
+#           channel: '#bot-qa-automation'
+#           message: |+
+#             STATUS: ${{ job.status }}.
+#             ► Allure report: https://twill-aol.github.io/tests_twill_therapeutics_backend/
+#             Action builds: https://github.com/twill-aol/tests_twill_therapeutics_backend/actions/workflows/python-app.yml
+#         if: always()

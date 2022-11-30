@@ -9,16 +9,24 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
+# Удалить ▼
+hd_old.py
+helper.py
+flows_old.py
 develop-eggs/
 dist/
 downloads/
 eggs/
 .eggs/
-lib/
+logs/
+test_results/
+# lib/
 lib64/
 parts/
 sdist/
 var/
+test_results/
+logs/
 wheels/
 pip-wheel-metadata/
 share/python-wheels/
