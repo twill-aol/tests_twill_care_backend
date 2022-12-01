@@ -13,16 +13,23 @@ class MainCase(BaseCase):
     # response = MainCase.signup()
     user_id = ""
     email = ""
-    cookies = ""
+    cookies = {}
 
     @classmethod
     def cookies_marty_construction(self):
-        response_get_phpsessid = MyRequests.get('/signup/')
-        sessionid = response_get_phpsessid.cookies["sessionid"]
-        cookies = {
-            "sessionid": sessionid,
-        }
-        return cookies
+        response_get_phpsessid = MyRequests.get('/')
+        print(response_get_phpsessid.cookies)
+        print(response_get_phpsessid.cookies["PHPSESSID"])
+        print(type(response_get_phpsessid.cookies["PHPSESSID"]))
+        if response_get_phpsessid.cookies["PHPSESSID"]:
+            phpsesid = response_get_phpsessid.cookies["PHPSESSID"]
+            self.cookies["PHPSESSID"] = phpsesid
+
+        response_get_sessionid = MyRequests.get('/signup/')
+        if response_get_sessionid.cookies["sessionid"]:
+            sessionid = response_get_sessionid.cookies["sessionid"]
+            self.cookies["sessionid"] = sessionid
+        return self.cookies
 
     @classmethod
     def generate_names(self):
