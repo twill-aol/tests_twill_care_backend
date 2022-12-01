@@ -16,16 +16,11 @@ class MainCase(BaseCase):
     cookies = ""
 
     @classmethod
-    def cookies_marty_construction(self, response):
-        marty_session_id = self.get_cookie(self, response, "marty_session_id")
-        marty_session_id_hash = self.get_cookie(
-            self,
-            response,
-            "marty_session_id_hash"
-        )
+    def cookies_marty_construction(self):
+        response_get_phpsessid = MyRequests.get('/signup/')
+        sessionid = response_get_phpsessid.cookies["sessionid"]
         cookies = {
-            "marty_session_id": marty_session_id,
-            "marty_session_id_hash": marty_session_id_hash
+            "sessionid": sessionid,
         }
         return cookies
 
@@ -138,8 +133,8 @@ class MainCase(BaseCase):
             "first_name": f"Bot{TIME_START}",
             "last_name": f"AQABot{TIME_START}",
         }
-
-        response = MyRequests.post("/api/v2/user/", json=signup_data)
+        MainCase.cookies_marty_construction()
+        response = MyRequests.post("/api/v2/user/", json=signup_data, cookies=self.cookies)
 
         Assertions.assert_code_status(response, 200)
         # Assertions.assert_json_has_keys(
@@ -154,9 +149,9 @@ class MainCase(BaseCase):
         #         "access_token",
         #     ],
         # )
-        self.user_id = BaseCase.response_to_json(response)["user_id"]
+        self.user_id = BaseCase.response_to_json(response)["user"]["id"]
         self.email = BaseCase.response_to_json(response)["user"]["email"]
-        self.cookies = MainCase.cookies_marty_construction(response)
+        self.access_token = BaseCase.response_to_json(response)["access_token"]
         return self.user_id, self.email, self.cookies
 
     @classmethod

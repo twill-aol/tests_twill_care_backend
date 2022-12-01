@@ -64,7 +64,7 @@ class MyRequests:
         method: str
     ):
 
-        url = f"https://therapeutics.stage-twill.health{url}"
+        url = f"https://care.stage-twill.health{url}"
         if headers is None:
             headers = {}
         if cookies is None:
