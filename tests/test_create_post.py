@@ -10,7 +10,8 @@ from lib.my_requests import MyRequests
 class TestCreatePost(BaseCase):
     '''Tests Community posts'''
 
-    user_id, email, cookies = MainCase.signup_router()
+    user_id, email, cookies, access_token = MainCase.signup_router()
+    print('►', user_id, email, cookies, access_token)
     post_id = ""
     offender_user_id = ""
     comment_id = ""
@@ -37,16 +38,16 @@ class TestCreatePost(BaseCase):
 
         
 
-    @allure.label("community", "post", "track", "authorization")
-    @allure.description("This test checks \
-    /api/activity/?page=1&page_size=12&feed_filter=trackGroup")
-    def test_community_track_posts(self):
-        '''Get track posts in Community'''
-        response = MyRequests.get(
-            "/api/activity/?page=1&page_size=12&feed_filter=trackGroup",
-            # cookies=self.cookies
-        )
-        Assertions.assert_code_status(response, 200)
-        response_as_dict = BaseCase.response_to_json(response)
-        if len(response_as_dict) > 0:
-            assert ("id" and "user_id") in response_as_dict[0]
+    # @allure.label("community", "post", "track", "authorization")
+    # @allure.description("This test checks \
+    # /api/activity/?page=1&page_size=12&feed_filter=trackGroup")
+    # def test_community_track_posts(self):
+    #     '''Get track posts in Community'''
+    #     response = MyRequests.get(
+    #         "/api/activity/?page=1&page_size=12&feed_filter=trackGroup",
+    #         # cookies=self.cookies
+    #     )
+    #     Assertions.assert_code_status(response, 200)
+    #     response_as_dict = BaseCase.response_to_json(response)
+    #     if len(response_as_dict) > 0:
+    #         assert ("id" and "user_id") in response_as_dict[0]

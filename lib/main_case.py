@@ -13,10 +13,12 @@ class MainCase(BaseCase):
     # response = MainCase.signup()
     user_id = ""
     email = ""
+    password = "Password+1"
     cookies = {}
+    access_token = {}
 
     @classmethod
-    def cookies_marty_construction(self):
+    def cookies_construction(self):
         response_get_phpsessid = MyRequests.get('/')
         print(response_get_phpsessid.cookies)
         print(response_get_phpsessid.cookies["PHPSESSID"])
@@ -30,6 +32,16 @@ class MainCase(BaseCase):
             sessionid = response_get_sessionid.cookies["sessionid"]
             self.cookies["sessionid"] = sessionid
         return self.cookies
+
+    @classmethod
+    def login_method(self):
+        json_data = {  # логин
+            "email": self.email,
+            "password": self.password,
+        }
+        response = MyRequests.post('https://auth.stage-twill.health/api/public/auth/?client_id=gAAAAABg0ekJj1wog3OxuvZe7Ff7JVxJkX53lLG0unWlePRpI_wHb3LUE3NapCFNxwyZzHr3RqD0BoC_YdlEXOErpD8LXmmYzw%3D%3D', json=json_data)
+        self.access_token = BaseCase.response_to_json(response)["access_token"]
+        return self.access_token
 
     @classmethod
     def generate_names(self):
@@ -133,14 +145,14 @@ class MainCase(BaseCase):
         signup_data = {
             "email": email,
             "username": f"Bot{TIME_START}",
-            "password": "Password+1",
+            "password": self.password,
             "postal": "11111",
             "gender": "male",
             "date_of_birth": '2000-10-10',
             "first_name": f"Bot{TIME_START}",
             "last_name": f"AQABot{TIME_START}",
         }
-        MainCase.cookies_marty_construction()
+        self.cookies_marty_construction()
         response = MyRequests.post("/api/v2/user/", json=signup_data, cookies=self.cookies)
 
         Assertions.assert_code_status(response, 200)
@@ -158,15 +170,18 @@ class MainCase(BaseCase):
         # )
         self.user_id = BaseCase.response_to_json(response)["user"]["id"]
         self.email = BaseCase.response_to_json(response)["user"]["email"]
+        self.login_method()
+
         self.access_token = BaseCase.response_to_json(response)["access_token"]
-        return self.user_id, self.email, self.cookies
+        print('►►', self.user_id, self.email, self.cookies, self.access_token)
+        return self.user_id, self.email, self.cookies, self.access_token
 
     @classmethod
     def signup_router(self, email=None):
         if self.cookies != "":
-            return self.user_id, self.email, self.cookies
+            return self.user_id, self.email, self.cookies, self.access_token
         else:
-            return MainCase.signup(email)
+            return self.signup(email)
 
     @classmethod
     def finder_text(self, content, flag, board):
