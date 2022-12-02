@@ -20,17 +20,19 @@ class MainCase(BaseCase):
     @classmethod
     def cookies_construction(self):
         response_get_phpsessid = MyRequests.get('/')
-        print(response_get_phpsessid.cookies)
-        print(response_get_phpsessid.cookies["PHPSESSID"])
-        print(type(response_get_phpsessid.cookies["PHPSESSID"]))
-        if response_get_phpsessid.cookies["PHPSESSID"]:
+        # if bool(response_get_phpsessid.cookies["PHPSESSID"]):
+        try:
             phpsesid = response_get_phpsessid.cookies["PHPSESSID"]
             self.cookies["PHPSESSID"] = phpsesid
-
+        except:
+            pass
         response_get_sessionid = MyRequests.get('/signup/')
-        if response_get_sessionid.cookies["sessionid"]:
+        # if response_get_sessionid.cookies["sessionid"]:
+        try:
             sessionid = response_get_sessionid.cookies["sessionid"]
             self.cookies["sessionid"] = sessionid
+        except:
+            pass
         return self.cookies
 
     @classmethod
@@ -152,7 +154,7 @@ class MainCase(BaseCase):
             "first_name": f"Bot{TIME_START}",
             "last_name": f"AQABot{TIME_START}",
         }
-        self.cookies_marty_construction()
+        MainCase.cookies_construction()
         response = MyRequests.post("/api/v2/user/", json=signup_data, cookies=self.cookies)
 
         Assertions.assert_code_status(response, 200)
@@ -170,17 +172,18 @@ class MainCase(BaseCase):
         # )
         self.user_id = BaseCase.response_to_json(response)["user"]["id"]
         self.email = BaseCase.response_to_json(response)["user"]["email"]
-        self.login_method()
+        # MainCase.login_method()
 
         self.access_token = BaseCase.response_to_json(response)["access_token"]
-        print('►►', self.user_id, self.email, self.cookies, self.access_token)
         return self.user_id, self.email, self.cookies, self.access_token
 
     @classmethod
     def signup_router(self, email=None):
-        if self.cookies != "":
+        if self.user_id != "":
+            print('►')
             return self.user_id, self.email, self.cookies, self.access_token
         else:
+            print('►►►')
             return self.signup(email)
 
     @classmethod
