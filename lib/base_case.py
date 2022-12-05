@@ -32,3 +32,13 @@ class BaseCase:
         assert name in response_as_dict, \
             "Response JSON does not have key '{name}'"
         return response_as_dict[name]
+
+    def finder_text(self, content, flag, board):
+        find_id_position = content.find(flag) + len(flag)
+        text = ""
+        for symbol in content[find_id_position:]:
+            if symbol != board:
+                text += symbol
+            else:
+                break
+        return text

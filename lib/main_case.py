@@ -1,11 +1,12 @@
 import datetime as dt
 import random
+import requests
 from lib.assertions import Assertions
 from lib.base_case import BaseCase
 from lib.my_requests import MyRequests
 
 
-TIME_START = str(dt.datetime.now().strftime("%Y%m%d%H%M"))[2:]
+TIME_START = str(dt.datetime.now().strftime("%Y%m%d%H%M%S"))[2:]
 
 
 class MainCase(BaseCase):
@@ -15,35 +16,40 @@ class MainCase(BaseCase):
     email = ""
     password = "Password+1"
     cookies = {}
-    access_token = {}
+    auth_token = ''
 
-    @classmethod
-    def cookies_construction(self):
-        response_get_phpsessid = MyRequests.get('/')
-        # if bool(response_get_phpsessid.cookies["PHPSESSID"]):
-        try:
-            phpsesid = response_get_phpsessid.cookies["PHPSESSID"]
-            self.cookies["PHPSESSID"] = phpsesid
-        except:
-            pass
-        response_get_sessionid = MyRequests.get('/signup/')
-        # if response_get_sessionid.cookies["sessionid"]:
-        try:
-            sessionid = response_get_sessionid.cookies["sessionid"]
-            self.cookies["sessionid"] = sessionid
-        except:
-            pass
-        return self.cookies
+    # @classmethod
+    # def cookies_construction(self):
+    #     response_get_phpsessid = MyRequests.get('/')
+    #     # if bool(response_get_phpsessid.cookies["PHPSESSID"]):
+    #     try:
+    #         phpsesid = response_get_phpsessid.cookies["PHPSESSID"]
+    #         self.cookies["PHPSESSID"] = phpsesid
+    #     except:
+    #         pass
+    #     response_get_sessionid = MyRequests.get('/signup/')
+    #     # if response_get_sessionid.cookies["sessionid"]:
+    #     try:
+    #         sessionid = response_get_sessionid.cookies["sessionid"]
+    #         self.cookies["sessionid"] = sessionid
+    #     except:
+    #         pass
+    #     return self.cookies
 
     @classmethod
     def login_method(self):
-        json_data = {  # логин
+        json_data = {
             "email": self.email,
             "password": self.password,
         }
-        response = MyRequests.post('https://auth.stage-twill.health/api/public/auth/?client_id=gAAAAABg0ekJj1wog3OxuvZe7Ff7JVxJkX53lLG0unWlePRpI_wHb3LUE3NapCFNxwyZzHr3RqD0BoC_YdlEXOErpD8LXmmYzw%3D%3D', json=json_data)
-        self.access_token = BaseCase.response_to_json(response)["access_token"]
-        return self.access_token
+        response = requests.post('https://auth.stage-twill.health/api/public/auth/?client_id=gAAAAABg0ekJj1wog3OxuvZe7Ff7JVxJkX53lLG0unWlePRpI_wHb3LUE3NapCFNxwyZzHr3RqD0BoC_YdlEXOErpD8LXmmYzw%3D%3D', json=json_data)
+        marty_token = str(response.json()["access_token"])
+        response = requests.get(
+            'https://care.stage-twill.health/api/v1/auth/hauth/',
+            headers={'oauth-token': marty_token}
+        )
+        self.auth_token = str(response.json()["access_token"])
+        return self.auth_token
 
     @classmethod
     def generate_names(self):
@@ -154,7 +160,7 @@ class MainCase(BaseCase):
             "first_name": f"Bot{TIME_START}",
             "last_name": f"AQABot{TIME_START}",
         }
-        MainCase.cookies_construction()
+        # self.cookies = MainCase.cookies_construction()
         response = MyRequests.post("/api/v2/user/", json=signup_data, cookies=self.cookies)
 
         Assertions.assert_code_status(response, 200)
@@ -172,10 +178,9 @@ class MainCase(BaseCase):
         # )
         self.user_id = BaseCase.response_to_json(response)["user"]["id"]
         self.email = BaseCase.response_to_json(response)["user"]["email"]
-        # MainCase.login_method()
+        self.auth_token = MainCase.login_method()
 
-        self.access_token = BaseCase.response_to_json(response)["access_token"]
-        return self.user_id, self.email, self.cookies, self.access_token
+        return self.user_id, self.email, self.auth_token
 
     @classmethod
     def signup_router(self, email=None):
@@ -185,17 +190,6 @@ class MainCase(BaseCase):
         else:
             print('►►►')
             return self.signup(email)
-
-    @classmethod
-    def finder_text(self, content, flag, board):
-        find_id_position = content.find(flag) + len(flag)
-        text = ""
-        for symbol in content[find_id_position:]:
-            if symbol != board:
-                text += symbol
-            else:
-                break
-        return text
 
     @classmethod
     def good_phrases(self):
