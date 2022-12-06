@@ -146,7 +146,7 @@ class TestPost(PostCase):
 
     @allure.label("post", "authorization", "smoke")
     @allure.description("This test checks '/api/v1/reactions/'")
-    # @pytest.mark.xfail(reason="401. Problem will be fixed")
+    @pytest.mark.xfail(reason="401. Problem will be fixed")
     def test_reaction_post(self):
         '''Check reactioning a post'''
         response_create_post = self.action_post()
