@@ -5,13 +5,15 @@ from requests import Response
 class Assertions:
     @staticmethod
     def assert_json_value_by_name(
-        response: Response, name, expected_value, error_message
+        response: Response, names_and_expected_values: dict
     ):
         response_as_dict = BaseCase.response_to_json(response)
-
-        assert name in response_as_dict, \
-            f"Response JSON doesn't have key '{name}'"
-        assert response_as_dict[name] == expected_value, error_message
+        for item in names_and_expected_values:
+            assert item in response_as_dict, \
+                f"Response JSON doesn't have key '{item}'"
+            assert response_as_dict[item] == names_and_expected_values[item],\
+                f"Response-field {response_as_dict[item]} \
+                doesn't match {names_and_expected_values[item]}"
 
     @staticmethod
     def assert_json_has_key(response: Response, name):
@@ -56,3 +58,12 @@ class Assertions:
         len_of_json_answer = len(response_as_dict)
 
         assert len_of_json_answer == expected_length, error_message
+
+    @staticmethod
+    def assert_response_content(
+        response: Response, expected_value: str
+    ):
+        response_as_text = str(response.text)
+        assert expected_value == response_as_text, \
+                f"Response content '{response_as_text}' \
+                doesn't match '{expected_value}'"
