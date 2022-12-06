@@ -1,1 +1,1 @@
-► **Allure report:** https://twill-aol.github.io/tests_twill_therapeutics_backend/
+► **Allure report:** https://github.com/twill-aol/tests_twill_care_backend/
