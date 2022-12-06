@@ -177,3 +177,4 @@ class TestPost(PostCase):
                 "top_reactions": post_top_reactions,
             }
         )
+        self.delete_post(post_id)
