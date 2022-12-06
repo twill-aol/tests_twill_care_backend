@@ -30,12 +30,12 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Check code style
-        if: always()
-        run: |
-          python3 -m pip install --upgrade pip
-          pip install flake8
-          flake8
+      # - name: Check code style
+      #   if: always()
+      #   run: |
+      #     python3 -m pip install --upgrade pip
+      #     pip install flake8
+      #     flake8
   autotests:
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

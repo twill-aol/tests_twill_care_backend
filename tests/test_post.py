@@ -61,7 +61,6 @@ class TestPost(PostCase):
 
         self.delete_post(new_post_id)
 
-
     @allure.label("post", "authorization", "smoke")
     @allure.description("This test checks '/api/v1/threads/discussion/discussion_id/'")
     def test_delete_post(self):

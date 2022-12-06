@@ -65,5 +65,5 @@ class Assertions:
     ):
         response_as_text = str(response.text)
         assert expected_value == response_as_text, \
-                f"Response content '{response_as_text}' \
-                doesn't match '{expected_value}'"
+            f"Response content '{response_as_text}' \
+            doesn't match '{expected_value}'"
