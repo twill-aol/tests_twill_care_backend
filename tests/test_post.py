@@ -113,7 +113,7 @@ class TestPost(PostCase):
         self.delete_post(new_post_id)
 
     @allure.label("post", "authorization", "smoke")
-    @allure.description("This test checks '/api/v1/threads/discussion/discussion_id/'")
+    @allure.description("This test checks put:/api/v1/threads/discussion/")
     @pytest.mark.xfail(reason="401. Problem will be fixed")
     def test_edit_post(self):
         '''Check editing a post'''
@@ -145,8 +145,8 @@ class TestPost(PostCase):
         self.delete_post(new_post_id)
 
     @allure.label("post", "authorization", "smoke")
-    @allure.description("This test checks '/api/v1/threads/discussion/discussion_id/'")
-    @pytest.mark.xfail(reason="401. Problem will be fixed")
+    @allure.description("This test checks '/api/v1/reactions/'")
+    # @pytest.mark.xfail(reason="401. Problem will be fixed")
     def test_reaction_post(self):
         '''Check reactioning a post'''
         response_create_post = self.action_post()

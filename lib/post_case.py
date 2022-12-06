@@ -99,7 +99,7 @@ class PostCase(MainCase):
 
     @classmethod
     def reaction_action(self, data):
-        response_reaction = requests.post(
+        response_reaction = MyRequests.post(
             "/api/v1/reactions/",
             json=data,
             headers={'oauth-token': self.auth_token}
