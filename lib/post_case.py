@@ -99,3 +99,12 @@ class PostCase(MainCase):
         Assertions.assert_code_status(response_feed, 200)
         return response_feed
 
+    @classmethod
+    def reaction_action(self, data):
+        response_reaction = requests.post(
+            "/api/v1/reactions/",
+            json=data,
+            headers={'oauth-token': self.auth_token}
+        )
+        Assertions.assert_code_status(response_reaction, 201)
+        return response_reaction

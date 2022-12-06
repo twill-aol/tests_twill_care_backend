@@ -144,3 +144,38 @@ class TestPost(PostCase):
             tags in editing post: [{edit_post_tags}]'
 
         self.delete_post(new_post_id)
+
+    @allure.label("post", "authorization", "smoke")
+    @allure.description("This test checks '/api/v1/threads/discussion/discussion_id/'")
+    @pytest.mark.xfail(reason="401. Problem will be fixed")
+    def test_reaction_post(self):
+        '''Check reactioning a post'''
+        response_create_post = self.action_post()
+        response_create_post_json = self.response_to_json(response_create_post)
+        post_id = response_create_post_json["id"]
+        post_reactions = response_create_post_json["reactions"]
+        post_top_reactions = response_create_post_json["top_reactions"]
+        response_reaction = self.reaction_action(
+            {
+                "model_id": post_id,
+                "model_type": "post",
+                "reaction": "insightful",
+            }
+        )
+        Assertions.assert_json_has_keys(
+            response_reaction,
+            [
+                "top_reactions",
+                "reacted_by_me",
+                "reactions"
+            ]
+        )
+        Assertions.assert_json_value_by_name(
+            response_reaction,
+            {
+                "reaction": post_reactions,
+                "top_reactions": post_top_reactions,
+            }
+
+        )
+
