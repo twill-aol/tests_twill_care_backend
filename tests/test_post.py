@@ -176,6 +176,4 @@ class TestPost(PostCase):
                 "reaction": post_reactions,
                 "top_reactions": post_top_reactions,
             }
-
         )
-
