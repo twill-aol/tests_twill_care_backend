@@ -1,6 +1,0 @@
-"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"skipped","Tue Dec 06 17:27:58 GMT 2022","Tue Dec 06 17:27:58 GMT 2022","403","tests","test_post","TestPost","","","test_reaction_post","This test checks '/api/v1/reactions/'"
-"passed","Tue Dec 06 17:27:56 GMT 2022","Tue Dec 06 17:27:56 GMT 2022","439","tests","test_post","TestPost","","","test_delete_post","This test checks '/api/v1/threads/discussion/discussion_id/'"
-"passed","Tue Dec 06 17:27:54 GMT 2022","Tue Dec 06 17:27:56 GMT 2022","1437","tests","test_post","TestPost","","","test_create_post","This test checks '/api/v1/threads/discussion/'"
-"skipped","Tue Dec 06 17:27:57 GMT 2022","Tue Dec 06 17:27:58 GMT 2022","533","tests","test_post","TestPost","","","test_edit_post","This test checks put:/api/v1/threads/discussion/"
-"passed","Tue Dec 06 17:27:56 GMT 2022","Tue Dec 06 17:27:57 GMT 2022","846","tests","test_post","TestPost","","","test_read_post","This test checks '/api/v1/threads/discussion/discussion_id/'"
