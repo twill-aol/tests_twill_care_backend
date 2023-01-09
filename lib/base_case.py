@@ -33,7 +33,7 @@ class BaseCase:
             "Response JSON does not have key '{name}'"
         return response_as_dict[name]
 
-    def finder_text(content, flag, board):
+    def finder_text(self, content, flag, board):
         left_id_position = content.find(flag) + len(flag)
         right_id_position = content[left_id_position : ].find(board) + left_id_position
         text = content[left_id_position : right_id_position]
